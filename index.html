@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<!--Hibabejelentő v1.0 2024.02.28.-->>
+<html>
+  <head>
+    <title>Jetro hibabejelentő</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+    <style>
+      html, body {
+      min-height: 100%;
+      }
+      body, div, form, input, select, p, textarea { 
+      padding: 0;
+      margin: 0;
+      outline: none;
+      font-family: Roboto, Arial, sans-serif;
+      font-size: 16px;
+      color: #eee;
+      }
+      body {
+      background: url("images/Jetro_hatter_hu.png") no-repeat center;
+      background-size: cover;
+      }
+      h1, h2 {
+      text-transform: uppercase;
+      font-weight: 400;
+      }
+      h2 {
+      margin: 0 0 0 8px;
+      }
+      .main-block {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      padding: 25px;
+      background: rgba(0, 0, 0, 0.6); 
+      }
+      .left-part, form {
+      padding: 25px;
+      }
+      .left-part {
+      text-align: center;
+      }
+      .fa-graduation-cap {
+      font-size: 72px;
+      }
+      form {
+      background: rgba(0, 0, 0, 0.7); 
+      }
+      .title {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      }
+      .info {
+      display: flex;
+      flex-direction: column;
+      }
+      input, select {
+      padding: 5px;
+      margin-bottom: 30px;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid #eee;
+      }
+      input::placeholder {
+      color: #eee;
+      }
+      option:focus {
+      border: none;
+      }
+      option {
+      background: black; 
+      border: none;
+      }
+      .checkbox input {
+      margin: 0 10px 0 0;
+      vertical-align: middle;
+      }
+      .checkbox a {
+      color: #26a9e0;
+      }
+      .checkbox a:hover {
+      color: #85d6de;
+      }
+      .btn-item, button {
+      padding: 10px 5px;
+      margin-top: 20px;
+      border-radius: 5px; 
+      border: none;
+      background: #21686C; 
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 400;
+      color: #fff;
+      }
+      .btn-item {
+      display: inline-block;
+      margin: 20px 5px 0;
+      }
+      button {
+      width: 100%;
+      }
+      button:hover, .btn-item:hover {
+      background: #85d6de;
+      }
+
+      textarea {
+      width: 100%;
+      height: 100px;
+      padding: 5px;
+      margin-bottom: 30px;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid #eee;
+      color: #eee;
+      box-sizing: border-box;
+      }
+
+      textarea::placeholder {
+          color: #eee;
+      }
+
+      @media (min-width: 568px) {
+      html, body {
+      height: 100%;
+      }
+      .main-block {
+      flex-direction: row;
+      height: calc(100% - 50px);
+      }
+      .left-part, form {
+      flex: 1;
+      height: auto;
+      }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main-block">
+      <div class="left-part">
+        <img src="images/jetro_logo.png" alt="Jetro Logo">
+        <h1>Hibabejelentő űrlap</h1>
+      </div>
+      <form action="/">
+        <div class="title">
+          <i class="fas fa-pencil-alt"></i> 
+          <h2>Hiba leírása</h2>
+        </div>
+        <div class="info">
+          <input class="fname" type="text" name="short" placeholder="Hiba rövid leírása">
+          <textarea name="long" placeholder="Hiba hosszú kifejtése"></textarea>
+          <input class="fname" type="text" name="company" placeholder="Vállalat">
+          <input type="text" name="mail" placeholder="Visszajelzési email-cím (nem kötelező)">
+        </div>
+        <div class="checkbox">
+          <input type="checkbox" name="checkbox"><span>A hibajelentéssel kapcsolatosan hozzájárulok az e-mail címem kezeléséhez.</a></span>
+        </div>
+        <div class="honeypot">
+          <input type="checkbox" name="honeypot" style="display: none;">
+        </div>
+        <button type="submit" href="/">Submit</button>
+        <br>        <br>
+        <div class="info">
+        <i  style="text-align:center">Ha csatolmányt (pl. képernyőfotó) kíván csatolni a bejelentéshez, kérjük, hogy előbb jelentse be itt a hibát, majd a kapott automatikus levélre válaszként csatolja a fájlt.</i>
+        </div>
+      </form>
+    </div>
+
+    <script type="module">
+
+      var ticketTorzs = ''
+      function generateReference() {
+        const currentDate = new Date();
+        const yyyymmddhhmmss = currentDate.toISOString().replace(/\D/g, '').slice(0, 14);
+        const randomNumbers = Math.floor( Math.random() * 10 ) + '' + Math.floor( Math.random() * 10 );
+        ticketTorzs = yyyymmddhhmmss + '_' + randomNumbers;
+        return 'ReportedBugs/Ticket_' + ticketTorzs;
+      }
+
+
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+      import { getDatabase, ref, push, set} from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+    
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyCfXya_NIhtclHYbr0googywMrVq746toY",
+        authDomain: "bugtrackerv2.firebaseapp.com",
+        databaseURL: "https://bugtrackerv2-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "bugtrackerv2",
+        storageBucket: "bugtrackerv2.appspot.com",
+        messagingSenderId: "638633186157",
+        appId: "1:638633186157:web:0c8cb01c8ae7ff89988064"
+      };
+    
+ 
+      const app = initializeApp(firebaseConfig);
+      const database = getDatabase(app);
+
+        function handleSubmit(event) {
+          event.preventDefault();
+
+
+        const shortDescrValue = document.querySelector('.fname[name="short"]').value;
+        const longDescrValue = document.querySelector('textarea[name="long"]').value;
+        const companyValue = document.querySelector('.fname[name="company"]').value;
+
+        const honeypotCheckbox = document.querySelector('.honeypot input[name="honeypot"]');
+        const agreedCheckbox = document.querySelector('.checkbox input[name="checkbox"]');
+        if (honeypotCheckbox.checked || agreedCheckbox.checked === false || 
+      shortDescrValue.trim() === '' || longDescrValue.trim() === '' || companyValue.trim() === '') {
+        alert('Sikertelen beküldés, kérlek töltsd ki a kötelező mezőket, és pipáld ki a hozzájárulás mezőt!');
+        return;
+          }
+          else {
+          const formData = {
+            ShortDescr: document.querySelector('.fname[name="short"]').value,
+            LongDescr: document.querySelector('textarea[name="long"]').value,
+            Company: document.querySelector('.fname[name="company"]').value,
+            ContactInfo: document.querySelector('input[name="mail"]').value
+          };
+
+          // Push data
+          const referenceString = generateReference();
+          const testRef = ref(database, referenceString);
+          set(testRef, formData);
+          alert('Köszönjük a bejelentést! Fejlesztőink mihamarabb elkezdik a hiba feltárását. Ha adott meg email-címet, visszajelzést fog kapni a folyamatról. A következő hibajegy lett rendelve a bejelentéshez: ' + ticketTorzs);
+          document.querySelector('form').reset();
+        }
+      }
+
+        document.querySelector('form').addEventListener('submit', handleSubmit);
+    </script>
+
+
+  </body>
+</html>
